@@ -77,7 +77,7 @@
 **方案：侧边栏 + 列表**
 
 - 左侧固定分类导航（全部 / 健康 / 家庭 / 工作 / 教会 / 宣教…），显示各分类数量
-- 右侧代祷卡片列表，每张卡片显示：标题、发布者（匿名或显示名）、分类、时间
+- 右侧代祷卡片列表，每张卡片直接展示内容正文（超过约 100 字折叠，点击展开）、发布者（匿名或显示名）、分类、时间
 - 手机端侧边栏折叠进顶部筛选 Tab 或汉堡菜单
 - 顶部 Hero 区含网站名称、简介、「发布代祷事项」按钮
 
@@ -107,7 +107,6 @@ color    text NOT NULL  -- Hex，如"#4a90d9"
 id           uuid PRIMARY KEY DEFAULT gen_random_uuid()
 user_id      uuid REFERENCES profiles(id)
 category_id  int REFERENCES categories(id)
-title        text NOT NULL
 content      text NOT NULL
 is_anonymous bool DEFAULT true   -- 默认匿名
 status       text DEFAULT 'active'  -- 'active' | 'expired' | 'deleted'
@@ -144,7 +143,7 @@ created_at  timestamptz DEFAULT now()
 3. 验证通过后自动创建 `profiles` 记录，role = `user`
 
 ### 8.2 发布代祷事项
-- 表单字段：标题、内容、分类（必填）；「显示我的名字」切换（默认关闭）
+- 表单字段：内容、分类（必填）；「显示我的名字」切换（默认关闭）
 - 提交后立即发布（无审核流程），30 天后自动归档
 
 ### 8.3 匿名逻辑

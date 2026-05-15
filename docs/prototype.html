@@ -101,7 +101,9 @@
   .prayer-card.yellow { border-left-color: #fbbc04; }
   .prayer-card.red { border-left-color: #ea4335; }
   .prayer-card.purple { border-left-color: #9c27b0; }
-  .card-title { font-size: 14px; font-weight: 700; color: #1a3a5c; margin-bottom: 5px; }
+  .card-content { font-size: 14px; color: #333; line-height: 1.7; margin-bottom: 8px; }
+  .card-content.collapsed { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-expand { font-size: 12px; color: #2d6a9f; cursor: pointer; margin-bottom: 8px; display: inline-block; }
   .card-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #888; }
   .cat-badge { border-radius: 10px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
   .badge-blue { background: #e8f0fe; color: #2d6a9f; }
@@ -246,7 +248,8 @@
           </div>
           <div class="prayer-list">
             <div class="prayer-card">
-              <div class="card-title">为家人的健康求神看顾</div>
+              <div class="card-content collapsed" id="c1">我的父亲最近身体不太好，检查出一些问题，需要进一步治疗。求神赐给他信心和力量，也求神引导医生做出正确的判断。求弟兄姊妹同心为我父亲代祷，愿神的平安临到我们全家。</div>
+              <span class="card-expand" onclick="toggleCard('c1',this)">展开全文 ▾</span>
               <div class="card-meta">
                 <span class="cat-badge badge-blue">健康</span>
                 <span>匿名</span>
@@ -254,7 +257,7 @@
               </div>
             </div>
             <div class="prayer-card green">
-              <div class="card-title">感谢神，为新工作机会祷告</div>
+              <div class="card-content">感谢神，新工作机会已蒙应允！求继续为我适应新环境祷告。</div>
               <div class="card-meta">
                 <span class="cat-badge badge-green">工作</span>
                 <span>李弟兄</span>
@@ -262,7 +265,8 @@
               </div>
             </div>
             <div class="prayer-card red">
-              <div class="card-title">为教会主日学复兴同心祷告</div>
+              <div class="card-content collapsed" id="c3">为教会主日学的复兴同心祷告。我们的主日学近几个月学生人数减少，老师们也感到疲乏。求神为我们兴起有恩赐的老师，也求神感动孩子们的心，渴慕认识神的话语。求弟兄姊妹为我们的孩子们代祷。</div>
+              <span class="card-expand" onclick="toggleCard('c3',this)">展开全文 ▾</span>
               <div class="card-meta">
                 <span class="cat-badge badge-red">教会</span>
                 <span>匿名</span>
@@ -270,7 +274,7 @@
               </div>
             </div>
             <div class="prayer-card yellow">
-              <div class="card-title">为子女在学校的功课和品格祷告</div>
+              <div class="card-content">为子女在学校的功课和与同学的关系祷告，愿神保守他们的心思意念。</div>
               <div class="card-meta">
                 <span class="cat-badge badge-yellow">家庭</span>
                 <span>王姊妹</span>
@@ -284,7 +288,7 @@
         <div class="annotation"><div class="ann-icon">🌐</div><div><div class="ann-title">顶部导航栏</div><div class="ann-desc">任何人都能看到「首页」「发布代祷」链接。右上角有「登录」「注册」按钮和中/英切换。登录后，「登录/注册」会变成自己的名字。</div></div></div>
         <div class="annotation green"><div class="ann-icon">✍️</div><div><div class="ann-title">「发布代祷事项」按钮</div><div class="ann-desc">首页中央最显眼的按钮。点击后——若已登录则直接进入发布页面；若未登录则先跳转到登录页，登录完成后再回到发布页面。</div></div></div>
         <div class="annotation"><div class="ann-icon">🏷️</div><div><div class="ann-title">左侧分类筛选</div><div class="ann-desc">点击「健康」「家庭」等分类，右侧列表会只显示该分类的代祷事项。括号内数字是该分类的条目数。手机上分类会折叠成顶部横向标签。</div></div></div>
-        <div class="annotation"><div class="ann-icon">📋</div><div><div class="ann-title">代祷卡片</div><div class="ann-desc">每张卡片显示：标题、分类标签、发布者（选择匿名则显示「匿名」，否则显示名字）、发布时间。点击卡片进入详情页。</div></div></div>
+        <div class="annotation"><div class="ann-icon">📋</div><div><div class="ann-title">代祷卡片</div><div class="ann-desc">每张卡片直接展示代祷内容正文。内容较短时全部显示；超过约 3 行则自动折叠，显示「展开全文」按钮，点击即可看完整内容。卡片底部显示分类标签、发布者和时间。</div></div></div>
         <div class="annotation orange"><div class="ann-icon">📅</div><div><div class="ann-title">自动过期</div><div class="ann-desc">每条代祷事项发布后 30 天自动归档，不再显示在首页，但记录仍保留。发布者会在到期前 3 天收到邮件提醒。</div></div></div>
       </div>
     </div>
@@ -303,7 +307,6 @@
         </div>
         <div class="detail-content">
           <a class="nav-back" onclick="show('home')">← 返回列表</a>
-          <div class="detail-title">为家人的健康求神看顾</div>
           <div class="detail-meta">
             <span class="cat-badge badge-blue">健康</span>
             <span>匿名</span>
@@ -402,11 +405,6 @@
         <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行</div><div class="site-nav-links"><a>首页</a><a class="nav-btn">王弟兄 ▾</a><span class="nav-lang">中 / EN</span></div></div>
         <div class="section-pad">
           <div class="section-title">发布代祷事项</div>
-          <div class="form-group">
-            <label class="form-label">标题 <span style="color:#ea4335;">*</span></label>
-            <input class="form-input" value="为父亲的病情祷告" readonly>
-            <div class="form-hint">简短描述代祷主题，一句话即可</div>
-          </div>
           <div class="form-group">
             <label class="form-label">分类 <span style="color:#ea4335;">*</span></label>
             <select class="form-input form-select"><option>健康</option></select>
@@ -733,6 +731,16 @@ function show(id) {
   var nav = document.getElementById('nav-' + id);
   if (nav) nav.classList.add('active');
   window.scrollTo(0, 0);
+}
+function toggleCard(id, btn) {
+  var el = document.getElementById(id);
+  if (el.classList.contains('collapsed')) {
+    el.classList.remove('collapsed');
+    btn.textContent = '收起 ▴';
+  } else {
+    el.classList.add('collapsed');
+    btn.textContent = '展开全文 ▾';
+  }
 }
 </script>
 </body>
