@@ -91,7 +91,6 @@ id            uuid PRIMARY KEY  -- 对应 auth.users.id
 display_name  text NOT NULL
 role          text DEFAULT 'user'  -- 'user' | 'admin'
 is_active     bool DEFAULT true
-notify_on_pray bool DEFAULT true
 created_at    timestamptz DEFAULT now()
 ```
 
@@ -161,7 +160,6 @@ created_at  timestamptz DEFAULT now()
 ### 8.3 「我在为你祷告」
 - 登录用户和访客均可点击
 - 通过 `pray_logs` 去重（登录用户按 user_id，访客按 IP 哈希）
-- 点击后给发布者发邮件（若 `notify_on_pray = true`）
 
 ### 8.4 匿名逻辑
 - `is_anonymous = true` 时，前端展示「匿名」；管理员后台始终显示真实发布者
@@ -193,7 +191,6 @@ created_at  timestamptz DEFAULT now()
 | 类型 | 触发时机 | 收件人 |
 |------|---------|--------|
 | 邮箱验证 | 注册时 | 新用户 |
-| `pray_received` | 有人点击「我在祷告」 | 发布者（若开启通知） |
 | `expiry_reminder` | 代祷事项到期前 3 天 | 发布者 |
 | `new_admin_message` | 用户发送留言 | 管理员 |
 
