@@ -34,11 +34,11 @@ export default function RegisterForm() {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1">{t('lastName')}</label>
-          <input name="last_name" required className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" />
+          <input name="last_name" required className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none" />
         </div>
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1">{t('firstName')}</label>
-          <input name="first_name" required className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" />
+          <input name="first_name" required className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none" />
         </div>
       </div>
 
@@ -46,7 +46,7 @@ export default function RegisterForm() {
         <label className="block text-sm font-semibold text-gray-700 mb-2">{t('gender')}</label>
         <div className="grid grid-cols-2 gap-3">
           {(['brother', 'sister'] as const).map((g) => (
-            <label key={g} className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+            <label key={g} className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
               <input type="radio" name="gender" value={g} required className="accent-blue-600" defaultChecked={g === 'brother'} />
               {t(g)}
             </label>
@@ -57,12 +57,12 @@ export default function RegisterForm() {
 
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-1">{t('email')}</label>
-        <input name="email" type="email" required className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" />
+        <input name="email" type="email" required className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none" />
       </div>
 
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-1">{t('newPassword')}</label>
-        <input name="password" type="password" required minLength={6} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" />
+        <input name="password" type="password" required minLength={6} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none" />
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
