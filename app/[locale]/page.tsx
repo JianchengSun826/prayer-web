@@ -10,7 +10,8 @@ export default async function HomePage({
   searchParams: Promise<{ category?: string }>
 }) {
   const { category } = await searchParams
-  const activeCategoryId = category ? parseInt(category) : null
+  const parsed = category ? parseInt(category, 10) : NaN
+  const activeCategoryId = Number.isFinite(parsed) ? parsed : null
   const locale = await getLocale() as 'zh' | 'en'
   const t = await getTranslations('home')
 
@@ -46,7 +47,7 @@ export default async function HomePage({
     .eq('status', 'active')
     .order('created_at', { ascending: false })
 
-  if (activeCategoryId) {
+  if (activeCategoryId !== null) {
     query = query.eq('category_id', activeCategoryId)
   }
 
