@@ -252,7 +252,7 @@
               <span class="card-expand" onclick="toggleCard('c1',this)">展开全文 ▾</span>
               <div class="card-meta">
                 <span class="cat-badge badge-blue">健康</span>
-                <span>匿名</span>
+                <span>王弟兄</span>
                 <span>2 天前</span>
               </div>
             </div>
@@ -269,7 +269,7 @@
               <span class="card-expand" onclick="toggleCard('c3',this)">展开全文 ▾</span>
               <div class="card-meta">
                 <span class="cat-badge badge-red">教会</span>
-                <span>匿名</span>
+                <span>林姊妹</span>
                 <span>4 天前</span>
               </div>
             </div>
@@ -309,7 +309,7 @@
           <a class="nav-back" onclick="show('home')">← 返回列表</a>
           <div class="detail-meta">
             <span class="cat-badge badge-blue">健康</span>
-            <span>匿名</span>
+            <span>王弟兄</span>
             <span>2026年5月13日</span>
             <span>还有 28 天到期</span>
           </div>
@@ -322,7 +322,7 @@
       </div>
       <div class="annotations">
         <div class="annotation"><div class="ann-icon">← </div><div><div class="ann-title">「返回列表」</div><div class="ann-desc">点击返回首页代祷列表，不会丢失当前筛选分类。</div></div></div>
-        <div class="annotation"><div class="ann-icon">匿</div><div><div class="ann-title">匿名显示</div><div class="ann-desc">发布时选择匿名的，这里显示「匿名」，不显示任何个人信息。只有管理员在后台才能看到真实发布者。</div></div></div>
+        <div class="annotation"><div class="ann-icon">👤</div><div><div class="ann-title">发布者称呼</div><div class="ann-desc">显示注册时填写的姓名生成的称呼：中文显示「王弟兄」，英文显示「Bro. James」。不显示完整姓名。管理员在后台可查看完整姓名和邮箱。</div></div></div>
         <div class="annotation purple"><div class="ann-icon">✉️</div><div><div class="ann-title">「联系管理员」按钮</div><div class="ann-desc">只有登录的用户才能看到这个按钮。点击后弹出一个文字输入框，填写内容后发送给管理员。管理员会收到邮件提醒，并在后台查看留言。</div></div></div>
       </div>
     </div>
@@ -370,10 +370,27 @@
         <div class="auth-box">
           <div class="auth-title">创建账号</div>
           <div class="auth-sub">填写以下信息即可加入</div>
+          <div style="display:flex;gap:10px;margin-bottom:14px;">
+            <div style="flex:1;">
+              <label class="form-label">姓</label>
+              <input class="form-input" value="王" readonly>
+            </div>
+            <div style="flex:1;">
+              <label class="form-label">名</label>
+              <input class="form-input" value="大明" readonly>
+            </div>
+          </div>
           <div class="form-group" style="padding:0;margin-bottom:14px;">
-            <label class="form-label">显示名称 <span style="color:#888;font-weight:400;">（其他人看到的你的名字）</span></label>
-            <input class="form-input" value="王弟兄" readonly>
-            <div class="form-hint">可以是真实姓名，也可以用弟兄/姊妹称呼，发布时仍可选匿名</div>
+            <label class="form-label">身份</label>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+              <label style="flex:1;display:flex;align-items:center;gap:8px;padding:9px 12px;border:2px solid #2d6a9f;border-radius:8px;cursor:pointer;background:#e8f0fe;">
+                <input type="radio" name="gender" checked readonly> <span style="font-size:14px;">弟兄 / Brother</span>
+              </label>
+              <label style="flex:1;display:flex;align-items:center;gap:8px;padding:9px 12px;border:1.5px solid #dce3ec;border-radius:8px;cursor:pointer;">
+                <input type="radio" name="gender" readonly> <span style="font-size:14px;">姊妹 / Sister</span>
+              </label>
+            </div>
+            <div class="form-hint" style="margin-top:6px;">中文显示「王弟兄」，英文显示「Bro. James」</div>
           </div>
           <div class="form-group" style="padding:0;margin-bottom:14px;">
             <label class="form-label">邮箱地址</label>
@@ -389,7 +406,7 @@
         <div class="info-box green" style="margin:0 24px 24px;">✅ 注册后会收到一封验证邮件，点击邮件中的链接完成验证即可正常使用。</div>
       </div>
       <div class="annotations">
-        <div class="annotation green"><div class="ann-icon">✍️</div><div><div class="ann-title">只需三项信息</div><div class="ann-desc">显示名称（可以是「王弟兄」「Grace」等任意称呼）、邮箱地址、密码。没有电话号码、没有实名认证，极简注册。</div></div></div>
+        <div class="annotation green"><div class="ann-icon">✍️</div><div><div class="ann-title">注册信息</div><div class="ann-desc">填写姓、名、身份（弟兄/姊妹）、邮箱、密码，共五项。系统会根据这些信息自动生成展示名称：中文界面显示「王弟兄」，英文界面显示「Bro. James」，无需手动设置。</div></div></div>
         <div class="annotation"><div class="ann-icon">📧</div><div><div class="ann-title">邮箱验证</div><div class="ann-desc">注册后系统自动发一封验证邮件。点击邮件里的链接，账号立即激活。这一步是为了确认邮箱真实有效，以便接收通知。</div></div></div>
       </div>
     </div>
@@ -414,16 +431,7 @@
             <textarea class="form-input form-textarea" readonly>父亲最近身体不好，需要接受检查和治疗，请弟兄姊妹为他的身体恢复和心里的平安代祷，也为医生有智慧祷告。</textarea>
             <div class="form-hint">可以详细说明代祷背景，也可以只写简单的请求</div>
           </div>
-          <div class="form-group">
-            <label class="form-label" style="margin-bottom:10px;">显示方式</label>
-            <div class="toggle-row">
-              <div class="toggle"><div class="toggle-knob"></div></div>
-              <div>
-                <div style="font-size:14px;font-weight:600;color:#2d6a9f;">以匿名方式发布（当前）</div>
-                <div style="font-size:12px;color:#888;margin-top:2px;">其他人看到的是「匿名」，关闭后会显示你的名字「王弟兄」</div>
-              </div>
-            </div>
-          </div>
+          <div class="info-box" style="margin:0 24px 16px;">👤 发布后将以「王弟兄」的名义显示（中文），或「Bro. James」（英文）。</div>
           <div class="divider"></div>
           <div style="padding:0 24px 20px;display:flex;gap:12px;">
             <button class="btn btn-primary">发布代祷事项</button>
@@ -434,7 +442,7 @@
       </div>
       <div class="annotations">
         <div class="annotation"><div class="ann-icon">🏷️</div><div><div class="ann-title">标题 + 分类（必填）</div><div class="ann-desc">标题是一句话的概述，分类从「健康、家庭、工作、教会、宣教、其他」中选一个。内容可以详细也可以简短，完全由发布者决定。</div></div></div>
-        <div class="annotation green"><div class="ann-icon">🔀</div><div><div class="ann-title">匿名开关（默认开启）</div><div class="ann-desc">开关默认是「匿名」状态（蓝色=开启匿名）。如果愿意显示名字，把开关关掉即可，届时会显示注册时填写的显示名称。管理员在后台始终能看到真实发布者。</div></div></div>
+        <div class="annotation green"><div class="ann-icon">👤</div><div><div class="ann-title">发布者显示方式</div><div class="ann-desc">发布后系统自动以注册时的姓名生成称呼：中文界面显示「王弟兄」，英文界面显示「Bro. James」。不显示完整姓名，保护个人隐私的同时维持教会社群归属感。管理员在后台可查看完整姓名和邮箱。</div></div></div>
         <div class="annotation orange"><div class="ann-icon">📅</div><div><div class="ann-title">自动 30 天过期</div><div class="ann-desc">发布后首页会显示 30 天。到期前 3 天会收到邮件提醒，提醒后代祷事项自动归档，不在首页显示，但在「我的代祷事项」里仍可查看历史。</div></div></div>
       </div>
     </div>
@@ -578,7 +586,7 @@
             <tbody>
               <tr>
                 <td><strong>为父亲的病情祷告</strong></td>
-                <td>王大明<br><span style="font-size:11px;color:#888;">wang@example.com</span><br><span style="font-size:11px;color:#9c27b0;">（匿名发布）</span></td>
+                <td>王大明<br><span style="font-size:11px;color:#888;">wang@example.com</span><br><span style="font-size:11px;color:#888;">公开显示：王弟兄</span></td>
                 <td><span class="cat-badge badge-blue">健康</span></td>
                 <td>2026-05-13</td>
                 <td><span class="status-badge status-active">进行中</span></td>
@@ -605,7 +613,7 @@
         </div>
       </div>
       <div class="annotations">
-        <div class="annotation red"><div class="ann-icon">👁️</div><div><div class="ann-title">看到真实发布者</div><div class="ann-desc">即使用户选择了匿名发布，管理员在这里也能看到真实姓名和邮箱，并有「匿名发布」的标注。这是为了确保内容责任可追溯。</div></div></div>
+        <div class="annotation red"><div class="ann-icon">👁️</div><div><div class="ann-title">完整发布者信息</div><div class="ann-desc">管理员可看到每条代祷的完整姓名和邮箱，以及公开展示给其他用户的称呼（如「王弟兄」）。便于必要时联系发布者。</div></div></div>
         <div class="annotation"><div class="ann-icon">🗑️</div><div><div class="ann-title">删除代祷事项</div><div class="ann-desc">管理员可以删除任何不符合教会规范的内容（如不当言论、隐私泄露等）。删除后立即从首页消失。</div></div></div>
       </div>
     </div>

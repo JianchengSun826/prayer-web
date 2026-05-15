@@ -77,7 +77,7 @@
 **方案：侧边栏 + 列表**
 
 - 左侧固定分类导航（全部 / 健康 / 家庭 / 工作 / 教会 / 宣教…），显示各分类数量
-- 右侧代祷卡片列表，每张卡片直接展示内容正文（超过约 100 字折叠，点击展开）、发布者（匿名或显示名）、分类、时间
+- 右侧代祷卡片列表，每张卡片直接展示内容正文（超过约 100 字折叠，点击展开）、发布者（中文：姓+弟兄/姊妹；英文：Bro./Sis. + first name）、分类、时间
 - 手机端侧边栏折叠进顶部筛选 Tab 或汉堡菜单
 - 顶部 Hero 区含网站名称、简介、「发布代祷事项」按钮
 
@@ -87,12 +87,18 @@
 
 ### `profiles`（用户资料，关联 Supabase Auth）
 ```sql
-id            uuid PRIMARY KEY  -- 对应 auth.users.id
-display_name  text NOT NULL
-role          text DEFAULT 'user'  -- 'user' | 'admin'
-is_active     bool DEFAULT true
-created_at    timestamptz DEFAULT now()
+id         uuid PRIMARY KEY  -- 对应 auth.users.id
+last_name  text NOT NULL     -- 姓
+first_name text NOT NULL     -- 名
+gender     text NOT NULL     -- 'brother' | 'sister'
+role       text DEFAULT 'user'  -- 'user' | 'admin'
+is_active  bool DEFAULT true
+created_at timestamptz DEFAULT now()
 ```
+
+**展示名称逻辑（由前端计算，不存储）：**
+- 中文界面：`last_name` + 弟兄/姊妹（如「王弟兄」「李姊妹」）
+- 英文界面：Bro./Sis. + `first_name`（如「Bro. James」「Sis. Mary」）
 
 ### `categories`（分类标签）
 ```sql
@@ -108,7 +114,6 @@ id           uuid PRIMARY KEY DEFAULT gen_random_uuid()
 user_id      uuid REFERENCES profiles(id)
 category_id  int REFERENCES categories(id)
 content      text NOT NULL
-is_anonymous bool DEFAULT true   -- 默认匿名
 status       text DEFAULT 'active'  -- 'active' | 'expired' | 'deleted'
 expires_at   timestamptz DEFAULT now() + interval '30 days'
 created_at   timestamptz DEFAULT now()
@@ -138,17 +143,20 @@ created_at  timestamptz DEFAULT now()
 ## 8. 关键功能说明
 
 ### 8.1 注册流程
-1. 用户填写邮箱 + 显示名称
+1. 用户填写邮箱、姓（last name）、名（first name）、身份（弟兄/姊妹）、密码
 2. Supabase Auth 发送邮件验证链接
 3. 验证通过后自动创建 `profiles` 记录，role = `user`
 
 ### 8.2 发布代祷事项
-- 表单字段：内容、分类（必填）；「显示我的名字」切换（默认关闭）
+- 表单字段：内容、分类（必填）
+- 发布者以标准化格式显示（中文：姓+弟兄/姊妹；英文：Bro./Sis. + first name），无匿名选项
 - 提交后立即发布（无审核流程），30 天后自动归档
 
-### 8.3 匿名逻辑
-- `is_anonymous = true` 时，前端展示「匿名」；管理员后台始终显示真实发布者
-- RLS 策略：非管理员查询 `prayer_requests` 时，`user_id` 字段在匿名帖中返回 null
+### 8.3 发布者展示逻辑
+- 所有代祷事项均显示发布者，以标准化格式呈现，保护完整姓名隐私的同时维持社群归属感
+- 前端根据当前语言计算展示名：中文 → `last_name + '弟兄'/'姊妹'`；英文 → `'Bro.'/'Sis.' + first_name`
+- 管理员后台显示完整姓名（first name + last name）及邮箱
+- RLS 策略：所有用户可读 `prayer_requests`，但只能修改自己发布的记录
 
 ### 8.4 联系管理员
 - 登录用户可在账号页或代祷详情页打开「联系管理员」窗口
