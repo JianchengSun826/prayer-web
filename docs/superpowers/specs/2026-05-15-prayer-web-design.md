@@ -44,7 +44,7 @@
 | 角色 | 权限 |
 |------|------|
 | 访客 | 浏览代祷列表、查看详情 |
-| 注册用户 | 以上 + 发布代祷、点击「我在祷告」、联系管理员 |
+| 注册用户 | 以上 + 发布代祷、联系管理员 |
 | 管理员 | 以上 + 管理所有代祷事项、管理用户账号、查看留言 |
 
 ---
@@ -77,7 +77,7 @@
 **方案：侧边栏 + 列表**
 
 - 左侧固定分类导航（全部 / 健康 / 家庭 / 工作 / 教会 / 宣教…），显示各分类数量
-- 右侧代祷卡片列表，每张卡片显示：标题、发布者（匿名或显示名）、分类、时间、祷告人数
+- 右侧代祷卡片列表，每张卡片显示：标题、发布者（匿名或显示名）、分类、时间
 - 手机端侧边栏折叠进顶部筛选 Tab 或汉堡菜单
 - 顶部 Hero 区含网站名称、简介、「发布代祷事项」按钮
 
@@ -110,26 +110,16 @@ category_id  int REFERENCES categories(id)
 title        text NOT NULL
 content      text NOT NULL
 is_anonymous bool DEFAULT true   -- 默认匿名
-pray_count   int DEFAULT 0
 status       text DEFAULT 'active'  -- 'active' | 'expired' | 'deleted'
 expires_at   timestamptz DEFAULT now() + interval '30 days'
 created_at   timestamptz DEFAULT now()
-```
-
-### `pray_logs`（防重复点击「我在祷告」）
-```sql
-prayer_request_id  uuid REFERENCES prayer_requests(id)
-user_id            uuid REFERENCES profiles(id)  -- 可为空（访客）
-ip_hash            text  -- 访客用 IP 哈希去重
-created_at         timestamptz DEFAULT now()
-PRIMARY KEY (prayer_request_id, COALESCE(user_id::text, ip_hash))
 ```
 
 ### `email_notifications`（邮件队列）
 ```sql
 id          uuid PRIMARY KEY DEFAULT gen_random_uuid()
 to_user_id  uuid REFERENCES profiles(id)
-type        text  -- 'pray_received' | 'expiry_reminder' | 'new_admin_message'
+type        text  -- 'expiry_reminder' | 'new_admin_message'
 payload     jsonb
 sent_at     timestamptz  -- 发送后填写，null 表示待发送
 created_at  timestamptz DEFAULT now()
@@ -157,19 +147,15 @@ created_at  timestamptz DEFAULT now()
 - 表单字段：标题、内容、分类（必填）；「显示我的名字」切换（默认关闭）
 - 提交后立即发布（无审核流程），30 天后自动归档
 
-### 8.3 「我在为你祷告」
-- 登录用户和访客均可点击
-- 通过 `pray_logs` 去重（登录用户按 user_id，访客按 IP 哈希）
-
-### 8.4 匿名逻辑
+### 8.3 匿名逻辑
 - `is_anonymous = true` 时，前端展示「匿名」；管理员后台始终显示真实发布者
 - RLS 策略：非管理员查询 `prayer_requests` 时，`user_id` 字段在匿名帖中返回 null
 
-### 8.5 联系管理员
+### 8.4 联系管理员
 - 登录用户可在账号页或代祷详情页打开「联系管理员」窗口
 - 提交后写入 `admin_messages`，同时触发管理员邮件通知
 
-### 8.6 自动过期
+### 8.5 自动过期
 - Supabase Edge Function 每日运行一次
 - 扫描 `expires_at < now()` 且 `status = 'active'` 的记录，更新为 `expired`
 - 同时处理 `email_notifications` 表中待发送的邮件队列
