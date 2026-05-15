@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import type { Category } from '@/lib/types'
 
@@ -19,9 +19,17 @@ export default function CategorySidebar({ categories, totalCount, activeCategory
   const locale = useLocale() as 'zh' | 'en'
   const router = useRouter()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   function select(id: number | null) {
-    router.push(id === null ? pathname : `${pathname}?category=${id}`)
+    const params = new URLSearchParams(searchParams.toString())
+    if (id === null) {
+      params.delete('category')
+    } else {
+      params.set('category', String(id))
+    }
+    const query = params.toString()
+    router.replace(`${pathname}${query ? `?${query}` : ''}`)
   }
 
   const btnClass = (active: boolean) =>
