@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { getLocale } from 'next-intl/server'
 
 export async function createPrayerAction(formData: FormData) {
   const supabase = await createClient()
@@ -9,16 +10,26 @@ export async function createPrayerAction(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  const content = formData.get('content') as string
-  const category_id = parseInt(formData.get('category_id') as string)
+  const content = formData.get('content')
+  const category_id_raw = formData.get('category_id')
+
+  if (typeof content !== 'string' || content.trim().length === 0) {
+    return { error: 'Content is required' }
+  }
+  if (typeof category_id_raw !== 'string' || isNaN(parseInt(category_id_raw))) {
+    return { error: 'Category is required' }
+  }
+
+  const category_id = parseInt(category_id_raw)
 
   const { error } = await supabase
     .from('prayer_requests')
-    .insert({ user_id: user.id, content, category_id })
+    .insert({ user_id: user.id, content: content.trim(), category_id })
 
   if (error) return { error: error.message }
 
-  redirect('/my')
+  const locale = await getLocale()
+  redirect(locale === 'en' ? '/en/my' : '/my')
 }
 
 export async function deletePrayerAction(id: string) {
