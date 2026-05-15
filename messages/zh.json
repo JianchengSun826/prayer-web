@@ -70,6 +70,8 @@
     "lastName": "姓",
     "firstName": "名",
     "gender": "身份",
+    "brother": "弟兄",
+    "sister": "姊妹",
     "email": "邮箱地址（不可修改）",
     "save": "保存修改",
     "saved": "已保存",

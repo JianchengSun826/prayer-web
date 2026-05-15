@@ -49,8 +49,9 @@ export default function AccountForm({ profile, email }: Props) {
         <form onSubmit={handleProfileSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-semibold text-gray-700">{t('lastName')}</label>
+              <label htmlFor="last_name" className="mb-1 block text-sm font-semibold text-gray-700">{t('lastName')}</label>
               <input
+                id="last_name"
                 name="last_name"
                 defaultValue={profile.last_name}
                 required
@@ -58,8 +59,9 @@ export default function AccountForm({ profile, email }: Props) {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-semibold text-gray-700">{t('firstName')}</label>
+              <label htmlFor="first_name" className="mb-1 block text-sm font-semibold text-gray-700">{t('firstName')}</label>
               <input
+                id="first_name"
                 name="first_name"
                 defaultValue={profile.first_name}
                 required
@@ -83,15 +85,16 @@ export default function AccountForm({ profile, email }: Props) {
                     defaultChecked={profile.gender === g}
                     className="accent-blue-600"
                   />
-                  {g === 'brother' ? '弟兄 / Brother' : '姊妹 / Sister'}
+                  {g === 'brother' ? t('brother') : t('sister')}
                 </label>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-semibold text-gray-700">{t('email')}</label>
+            <label htmlFor="email" className="mb-1 block text-sm font-semibold text-gray-700">{t('email')}</label>
             <input
+              id="email"
               value={email}
               disabled
               className="w-full cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500"
@@ -116,8 +119,9 @@ export default function AccountForm({ profile, email }: Props) {
         <h2 className="mb-4 text-base font-semibold text-gray-900">{t('changePassword')}</h2>
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-semibold text-gray-700">{t('newPassword')}</label>
+            <label htmlFor="password" className="mb-1 block text-sm font-semibold text-gray-700">{t('newPassword')}</label>
             <input
+              id="password"
               name="password"
               type="password"
               required

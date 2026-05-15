@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import type { Gender } from '@/lib/types'
 
@@ -29,6 +30,9 @@ export async function updateProfileAction(formData: FormData) {
     .eq('id', user.id)
 
   if (error) return { error: error.message }
+
+  revalidatePath('/account')
+  revalidatePath('/en/account')
 
   return { success: true }
 }

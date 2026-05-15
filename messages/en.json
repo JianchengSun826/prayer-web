@@ -70,6 +70,8 @@
     "lastName": "Last name",
     "firstName": "First name",
     "gender": "Identity",
+    "brother": "Brother",
+    "sister": "Sister",
     "email": "Email (cannot be changed)",
     "save": "Save changes",
     "saved": "Saved",
