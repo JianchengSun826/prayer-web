@@ -16,11 +16,10 @@ export async function createPrayerAction(formData: FormData) {
   if (typeof content !== 'string' || content.trim().length === 0) {
     return { error: 'Content is required' }
   }
-  if (typeof category_id_raw !== 'string' || isNaN(parseInt(category_id_raw))) {
+  const category_id = Number(category_id_raw)
+  if (!Number.isInteger(category_id) || category_id < 1) {
     return { error: 'Category is required' }
   }
-
-  const category_id = parseInt(category_id_raw)
 
   const { error } = await supabase
     .from('prayer_requests')
@@ -33,6 +32,8 @@ export async function createPrayerAction(formData: FormData) {
 }
 
 export async function deletePrayerAction(id: string) {
+  if (!id) return { error: 'Invalid id' }
+
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
