@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { getLocale } from 'next-intl/server'
 
 export async function createPrayerAction(formData: FormData) {
@@ -46,6 +47,9 @@ export async function deletePrayerAction(id: string) {
     .eq('user_id', user.id)
 
   if (error) return { error: error.message }
+
+  revalidatePath('/my')
+  revalidatePath('/en/my')
 
   return { success: true }
 }
