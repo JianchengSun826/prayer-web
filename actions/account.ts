@@ -58,6 +58,9 @@ export async function sendAdminMessageAction(formData: FormData) {
   if (typeof content !== 'string' || content.trim().length === 0) {
     return { error: 'Message cannot be empty' }
   }
+  if (content.length > 2000) {
+    return { error: 'Message is too long (max 2000 characters)' }
+  }
 
   const { error } = await supabase
     .from('admin_messages')
