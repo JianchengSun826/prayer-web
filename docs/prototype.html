@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>代祷同行 · 页面设计展示</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f0f4f8; color: #222; }
+
+  /* Layout */
+  .shell { display: flex; min-height: 100vh; }
+
+  /* Left sidebar nav */
+  .sidenav {
+    width: 220px; min-width: 220px; background: #1a3a5c; color: white;
+    display: flex; flex-direction: column; padding: 20px 0;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  .sidenav-title { padding: 0 18px 16px; font-size: 13px; font-weight: 700; color: #90b8d8; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 8px; }
+  .sidenav-group { padding: 8px 18px 2px; font-size: 10px; color: #6a9bbf; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+  .sidenav a { display: block; padding: 8px 18px; font-size: 13px; color: rgba(255,255,255,0.75); text-decoration: none; border-radius: 0; cursor: pointer; transition: background 0.15s; }
+  .sidenav a:hover { background: rgba(255,255,255,0.08); color: white; }
+  .sidenav a.active { background: #2d6a9f; color: white; font-weight: 600; }
+
+  /* Main content */
+  .main { flex: 1; padding: 32px; overflow-x: hidden; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Page header */
+  .page-header { margin-bottom: 24px; }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: #1a3a5c; }
+  .page-header p { font-size: 14px; color: #666; margin-top: 6px; line-height: 1.6; }
+
+  /* Mockup frame */
+  .mockup-frame {
+    background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden; max-width: 900px; margin-bottom: 28px;
+  }
+  .mockup-bar {
+    background: #e8edf2; padding: 10px 14px; display: flex; align-items: center; gap: 6px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .mockup-url { margin-left: 10px; background: white; border-radius: 6px; padding: 3px 12px; font-size: 11px; color: #888; flex: 1; }
+
+  /* Annotation boxes */
+  .annotations { max-width: 900px; }
+  .annotation {
+    display: flex; gap: 14px; margin-bottom: 14px; padding: 14px 16px;
+    background: white; border-radius: 8px; border-left: 4px solid #2d6a9f;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .annotation.green { border-left-color: #34a853; }
+  .annotation.orange { border-left-color: #fbbc04; }
+  .annotation.red { border-left-color: #ea4335; }
+  .annotation.purple { border-left-color: #9c27b0; }
+  .ann-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .ann-title { font-size: 13px; font-weight: 700; color: #1a3a5c; margin-bottom: 3px; }
+  .ann-desc { font-size: 13px; color: #555; line-height: 1.6; }
+
+  /* Site components used in mockups */
+  .site-nav {
+    background: #2d6a9f; padding: 12px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .site-nav-logo { color: white; font-size: 15px; font-weight: 700; }
+  .site-nav-links { display: flex; align-items: center; gap: 16px; font-size: 13px; }
+  .site-nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; }
+  .nav-btn { background: white; color: #2d6a9f; border-radius: 16px; padding: 4px 12px; font-size: 12px; font-weight: 600; }
+  .nav-lang { border: 1px solid rgba(255,255,255,0.45); border-radius: 12px; padding: 3px 9px; color: rgba(255,255,255,0.85); font-size: 11px; }
+
+  .hero {
+    background: linear-gradient(135deg, #2d6a9f, #4a90d9);
+    padding: 32px 24px; text-align: center;
+  }
+  .hero h2 { color: white; font-size: 22px; font-weight: 700; }
+  .hero p { color: rgba(255,255,255,0.82); font-size: 13px; margin-top: 6px; }
+  .hero-btn { display: inline-block; background: white; color: #2d6a9f; border-radius: 24px; padding: 9px 22px; font-size: 13px; font-weight: 700; margin-top: 16px; text-decoration: none; }
+
+  .content-area { display: flex; }
+  .sidebar { width: 180px; min-width: 180px; background: #f8fafc; border-right: 1px solid #e5eaf0; padding: 16px 12px; }
+  .sidebar-title { font-size: 11px; font-weight: 700; color: #9ab; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  .cat-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-radius: 6px; font-size: 13px; margin-bottom: 3px; cursor: pointer; }
+  .cat-item.active { background: #2d6a9f; color: white; font-weight: 600; }
+  .cat-item:not(.active) { color: #445; }
+  .cat-item:not(.active):hover { background: #e8f0fe; }
+  .cat-count { font-size: 11px; opacity: 0.6; }
+
+  .prayer-list { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .prayer-card {
+    background: white; border-radius: 8px; padding: 14px 16px;
+    border-left: 4px solid #4a90d9; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    cursor: pointer; transition: box-shadow 0.15s;
+  }
+  .prayer-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.12); }
+  .prayer-card.green { border-left-color: #34a853; }
+  .prayer-card.yellow { border-left-color: #fbbc04; }
+  .prayer-card.red { border-left-color: #ea4335; }
+  .prayer-card.purple { border-left-color: #9c27b0; }
+  .card-title { font-size: 14px; font-weight: 700; color: #1a3a5c; margin-bottom: 5px; }
+  .card-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #888; }
+  .cat-badge { border-radius: 10px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+  .badge-blue { background: #e8f0fe; color: #2d6a9f; }
+  .badge-green { background: #e6f4ea; color: #1e7e34; }
+  .badge-yellow { background: #fef9e7; color: #9a6d00; }
+  .badge-red { background: #fce8e6; color: #c5221f; }
+  .badge-purple { background: #f3e8fd; color: #6a1b9a; }
+  .pray-count { margin-left: auto; color: #2d6a9f; font-weight: 600; }
+
+  .form-group { margin-bottom: 16px; padding: 0 24px; }
+  .form-label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; display: block; }
+  .form-input {
+    width: 100%; padding: 10px 12px; border: 1.5px solid #dce3ec; border-radius: 8px;
+    font-size: 14px; color: #222; outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: #2d6a9f; }
+  .form-textarea { min-height: 100px; resize: vertical; }
+  .form-select { background: white; }
+  .form-hint { font-size: 11px; color: #999; margin-top: 4px; }
+
+  .toggle-row { display: flex; align-items: center; gap: 10px; }
+  .toggle { width: 42px; height: 24px; background: #2d6a9f; border-radius: 12px; position: relative; cursor: pointer; flex-shrink: 0; }
+  .toggle-knob { position: absolute; right: 3px; top: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: right 0.2s; }
+  .toggle.off { background: #ccc; }
+  .toggle.off .toggle-knob { right: auto; left: 3px; }
+
+  .btn { display: inline-block; padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 700; text-align: center; cursor: pointer; border: none; }
+  .btn-primary { background: #2d6a9f; color: white; }
+  .btn-outline { background: white; color: #2d6a9f; border: 2px solid #2d6a9f; }
+  .btn-danger { background: #ea4335; color: white; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; }
+
+  .section-pad { padding: 20px 24px; }
+  .section-title { font-size: 14px; font-weight: 700; color: #1a3a5c; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #e5eaf0; }
+
+  .detail-content { padding: 24px; }
+  .detail-title { font-size: 20px; font-weight: 700; color: #1a3a5c; margin-bottom: 10px; }
+  .detail-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; font-size: 12px; color: #888; }
+  .detail-body { font-size: 14px; line-height: 1.8; color: #444; background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
+  .pray-btn { display: flex; align-items: center; gap: 8px; padding: 12px 24px; background: #e8f0fe; border: 2px solid #2d6a9f; border-radius: 12px; font-size: 15px; font-weight: 700; color: #2d6a9f; cursor: pointer; width: fit-content; margin-bottom: 12px; }
+  .contact-btn { display: flex; align-items: center; gap: 8px; padding: 10px 18px; background: white; border: 1.5px solid #dce3ec; border-radius: 10px; font-size: 13px; color: #555; cursor: pointer; width: fit-content; }
+
+  .admin-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 20px 24px; }
+  .stat-card { background: white; border-radius: 10px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; }
+  .stat-num { font-size: 32px; font-weight: 700; color: #2d6a9f; }
+  .stat-label { font-size: 12px; color: #888; margin-top: 4px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f0f4f8; padding: 10px 12px; text-align: left; font-weight: 700; color: #555; font-size: 12px; }
+  td { padding: 10px 12px; border-bottom: 1px solid #f0f4f8; color: #333; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+
+  .status-badge { border-radius: 10px; padding: 3px 9px; font-size: 11px; font-weight: 600; }
+  .status-active { background: #e6f4ea; color: #1e7e34; }
+  .status-expired { background: #f0f4f8; color: #888; }
+  .status-unread { background: #fce8e6; color: #c5221f; }
+  .status-read { background: #f0f4f8; color: #888; }
+  .status-admin { background: #f3e8fd; color: #6a1b9a; }
+
+  .auth-box { max-width: 420px; margin: 24px auto; padding: 32px 28px; }
+  .auth-title { font-size: 20px; font-weight: 700; color: #1a3a5c; margin-bottom: 6px; text-align: center; }
+  .auth-sub { font-size: 13px; color: #888; text-align: center; margin-bottom: 24px; }
+
+  .msg-card { background: white; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; border-left: 4px solid #ea4335; }
+  .msg-card.read { border-left-color: #ccc; }
+  .msg-from { font-size: 12px; color: #888; margin-bottom: 5px; }
+  .msg-content { font-size: 14px; color: #333; }
+
+  .nav-back { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: #2d6a9f; cursor: pointer; margin-bottom: 16px; padding: 6px 12px; background: #e8f0fe; border-radius: 6px; text-decoration: none; }
+
+  .cat-list { display: flex; flex-direction: column; gap: 8px; padding: 16px 24px; }
+  .cat-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .color-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+
+  .divider { height: 1px; background: #e5eaf0; margin: 12px 24px; }
+
+  .info-box { background: #e8f0fe; border-radius: 8px; padding: 12px 16px; margin: 12px 24px; font-size: 13px; color: #2d6a9f; line-height: 1.6; }
+  .info-box.green { background: #e6f4ea; color: #1e7e34; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- Left nav -->
+  <nav class="sidenav">
+    <div class="sidenav-title">页面导览</div>
+
+    <div class="sidenav-group">公开页面（任何人）</div>
+    <a onclick="show('home')" id="nav-home" class="active">🏠 首页 · 代祷列表</a>
+    <a onclick="show('detail')" id="nav-detail">🙏 代祷详情页</a>
+    <a onclick="show('login')" id="nav-login">🔑 登录</a>
+    <a onclick="show('register')" id="nav-register">📝 注册</a>
+
+    <div class="sidenav-group">登录后可用</div>
+    <a onclick="show('submit')" id="nav-submit">✍️ 发布代祷事项</a>
+    <a onclick="show('myprayers')" id="nav-myprayers">📋 我的代祷事项</a>
+    <a onclick="show('account')" id="nav-account">👤 账号设置</a>
+
+    <div class="sidenav-group">管理员专用</div>
+    <a onclick="show('admin')" id="nav-admin">📊 管理后台</a>
+    <a onclick="show('admin-prayers')" id="nav-admin-prayers">📖 管理代祷事项</a>
+    <a onclick="show('admin-users')" id="nav-admin-users">👥 管理用户</a>
+    <a onclick="show('admin-categories')" id="nav-admin-categories">🏷️ 管理分类</a>
+    <a onclick="show('admin-messages')" id="nav-admin-messages">💬 用户留言</a>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ===== 首页 ===== -->
+    <div class="page active" id="page-home">
+      <div class="page-header">
+        <h1>🏠 首页 · 代祷列表</h1>
+        <p>所有人都可以打开网站直接看到这个页面，不需要登录。左边选分类，右边浏览代祷事项。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app</div></div>
+        <div class="site-nav">
+          <div class="site-nav-logo">✟ 代祷同行</div>
+          <div class="site-nav-links">
+            <a>首页</a>
+            <a>✍️ 发布代祷</a>
+            <a>登录</a>
+            <a class="nav-btn">注册</a>
+            <span class="nav-lang">中 / EN</span>
+          </div>
+        </div>
+        <div class="hero">
+          <h2>代祷同行</h2>
+          <p>Standing in the Gap Together</p>
+          <a class="hero-btn">✍️ 发布代祷事项</a>
+        </div>
+        <div class="content-area">
+          <div class="sidebar">
+            <div class="sidebar-title">分类</div>
+            <div class="cat-item active">全部 <span class="cat-count">32</span></div>
+            <div class="cat-item">健康 <span class="cat-count">10</span></div>
+            <div class="cat-item">家庭 <span class="cat-count">8</span></div>
+            <div class="cat-item">工作 <span class="cat-count">7</span></div>
+            <div class="cat-item">教会 <span class="cat-count">5</span></div>
+            <div class="cat-item">宣教 <span class="cat-count">2</span></div>
+          </div>
+          <div class="prayer-list">
+            <div class="prayer-card">
+              <div class="card-title">为家人的健康求神看顾</div>
+              <div class="card-meta">
+                <span class="cat-badge badge-blue">健康</span>
+                <span>匿名</span>
+                <span>2 天前</span>
+                <span class="pray-count">🙏 12</span>
+              </div>
+            </div>
+            <div class="prayer-card green">
+              <div class="card-title">感谢神，为新工作机会祷告</div>
+              <div class="card-meta">
+                <span class="cat-badge badge-green">工作</span>
+                <span>李弟兄</span>
+                <span>3 天前</span>
+                <span class="pray-count">🙏 8</span>
+              </div>
+            </div>
+            <div class="prayer-card red">
+              <div class="card-title">为教会主日学复兴同心祷告</div>
+              <div class="card-meta">
+                <span class="cat-badge badge-red">教会</span>
+                <span>匿名</span>
+                <span>4 天前</span>
+                <span class="pray-count">🙏 20</span>
+              </div>
+            </div>
+            <div class="prayer-card yellow">
+              <div class="card-title">为子女在学校的功课和品格祷告</div>
+              <div class="card-meta">
+                <span class="cat-badge badge-yellow">家庭</span>
+                <span>王姊妹</span>
+                <span>5 天前</span>
+                <span class="pray-count">🙏 6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation"><div class="ann-icon">🌐</div><div><div class="ann-title">顶部导航栏</div><div class="ann-desc">任何人都能看到「首页」「发布代祷」链接。右上角有「登录」「注册」按钮和中/英切换。登录后，「登录/注册」会变成自己的名字。</div></div></div>
+        <div class="annotation green"><div class="ann-icon">✍️</div><div><div class="ann-title">「发布代祷事项」按钮</div><div class="ann-desc">首页中央最显眼的按钮。点击后——若已登录则直接进入发布页面；若未登录则先跳转到登录页，登录完成后再回到发布页面。</div></div></div>
+        <div class="annotation"><div class="ann-icon">🏷️</div><div><div class="ann-title">左侧分类筛选</div><div class="ann-desc">点击「健康」「家庭」等分类，右侧列表会只显示该分类的代祷事项。括号内数字是该分类的条目数。手机上分类会折叠成顶部横向标签。</div></div></div>
+        <div class="annotation"><div class="ann-icon">🙏</div><div><div class="ann-title">代祷卡片</div><div class="ann-desc">每张卡片显示：标题、分类标签、发布者（选择匿名则显示「匿名」，否则显示名字）、发布时间、祷告人数。点击卡片进入详情页。</div></div></div>
+        <div class="annotation orange"><div class="ann-icon">📅</div><div><div class="ann-title">自动过期</div><div class="ann-desc">每条代祷事项发布后 30 天自动归档，不再显示在首页，但记录仍保留。发布者会在到期前 3 天收到邮件提醒。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 代祷详情 ===== -->
+    <div class="page" id="page-detail">
+      <div class="page-header">
+        <h1>🙏 代祷详情页</h1>
+        <p>点击首页任意一条代祷事项后进入。任何人都可以查看全文和点击「我在为你祷告」。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/prayer/xxxx</div></div>
+        <div class="site-nav">
+          <div class="site-nav-logo">✟ 代祷同行</div>
+          <div class="site-nav-links"><a>首页</a><a>✍️ 发布代祷</a><a class="nav-btn">我的账号 ▾</a><span class="nav-lang">中 / EN</span></div>
+        </div>
+        <div class="detail-content">
+          <a class="nav-back" onclick="show('home')">← 返回列表</a>
+          <div class="detail-title">为家人的健康求神看顾</div>
+          <div class="detail-meta">
+            <span class="cat-badge badge-blue">健康</span>
+            <span>匿名</span>
+            <span>2026年5月13日</span>
+            <span>还有 28 天到期</span>
+          </div>
+          <div class="detail-body">
+            我的父亲最近身体不太好，检查出一些问题，需要进一步治疗。求神赐给他信心和力量，也求神引导医生做出正确的判断。求弟兄姊妹同心为我父亲代祷，愿神的平安临到我们全家。
+          </div>
+          <div class="pray-btn">🙏 我在为你祷告 &nbsp;<strong>12 人</strong></div>
+          <div class="contact-btn">✉️ 联系管理员</div>
+          <div class="info-box" style="margin: 16px 0 0 0; font-size: 12px;">「联系管理员」功能仅登录用户可见</div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation"><div class="ann-icon">← </div><div><div class="ann-title">「返回列表」</div><div class="ann-desc">点击返回首页代祷列表，不会丢失当前筛选分类。</div></div></div>
+        <div class="annotation green"><div class="ann-icon">🙏</div><div><div class="ann-title">「我在为你祷告」按钮</div><div class="ann-desc">任何人（包括未登录访客）都可以点击。每人每条事项只能点一次，重复点击无效。点击后数字增加，让发布者知道有多少人在为他祷告。</div></div></div>
+        <div class="annotation"><div class="ann-icon">匿</div><div><div class="ann-title">匿名显示</div><div class="ann-desc">发布时选择匿名的，这里显示「匿名」，不显示任何个人信息。只有管理员在后台才能看到真实发布者。</div></div></div>
+        <div class="annotation purple"><div class="ann-icon">✉️</div><div><div class="ann-title">「联系管理员」按钮</div><div class="ann-desc">只有登录的用户才能看到这个按钮。点击后弹出一个文字输入框，填写内容后发送给管理员。管理员会收到邮件提醒，并在后台查看留言。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 登录 ===== -->
+    <div class="page" id="page-login">
+      <div class="page-header">
+        <h1>🔑 登录页面</h1>
+        <p>已注册的用户在这里登录账号。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/auth/login</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行</div><div class="site-nav-links"><a>首页</a><span class="nav-lang">中 / EN</span></div></div>
+        <div class="auth-box">
+          <div class="auth-title">登录</div>
+          <div class="auth-sub">欢迎回来，请登录你的账号</div>
+          <div class="form-group" style="padding:0;margin-bottom:14px;">
+            <label class="form-label">邮箱地址</label>
+            <input class="form-input" value="example@email.com" readonly>
+          </div>
+          <div class="form-group" style="padding:0;margin-bottom:8px;">
+            <label class="form-label">密码</label>
+            <input class="form-input" value="••••••••" type="password" readonly>
+          </div>
+          <div style="text-align:right;margin-bottom:20px;font-size:13px;color:#2d6a9f;">忘记密码？</div>
+          <button class="btn btn-primary" style="width:100%;margin-bottom:16px;">登录</button>
+          <div style="text-align:center;font-size:13px;color:#888;">还没有账号？<span style="color:#2d6a9f;cursor:pointer;" onclick="show('register')">立即注册</span></div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation"><div class="ann-icon">📧</div><div><div class="ann-title">邮箱 + 密码登录</div><div class="ann-desc">用注册时的邮箱和密码登录。登录后会自动跳回之前想访问的页面（例如发布代祷页面）。</div></div></div>
+        <div class="annotation orange"><div class="ann-icon">🔒</div><div><div class="ann-title">忘记密码</div><div class="ann-desc">点击「忘记密码？」后输入邮箱，系统会发送重置密码的链接到邮箱，点击链接即可设置新密码。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 注册 ===== -->
+    <div class="page" id="page-register">
+      <div class="page-header">
+        <h1>📝 注册页面</h1>
+        <p>新用户注册账号。只需要填写邮箱和显示名称，门槛极低。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/auth/register</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行</div><div class="site-nav-links"><a>首页</a><span class="nav-lang">中 / EN</span></div></div>
+        <div class="auth-box">
+          <div class="auth-title">创建账号</div>
+          <div class="auth-sub">填写以下信息即可加入</div>
+          <div class="form-group" style="padding:0;margin-bottom:14px;">
+            <label class="form-label">显示名称 <span style="color:#888;font-weight:400;">（其他人看到的你的名字）</span></label>
+            <input class="form-input" value="王弟兄" readonly>
+            <div class="form-hint">可以是真实姓名，也可以用弟兄/姊妹称呼，发布时仍可选匿名</div>
+          </div>
+          <div class="form-group" style="padding:0;margin-bottom:14px;">
+            <label class="form-label">邮箱地址</label>
+            <input class="form-input" value="example@email.com" readonly>
+          </div>
+          <div class="form-group" style="padding:0;margin-bottom:20px;">
+            <label class="form-label">设置密码</label>
+            <input class="form-input" value="••••••••" type="password" readonly>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-bottom:16px;">注册</button>
+          <div style="text-align:center;font-size:13px;color:#888;">已有账号？<span style="color:#2d6a9f;cursor:pointer;" onclick="show('login')">去登录</span></div>
+        </div>
+        <div class="info-box green" style="margin:0 24px 24px;">✅ 注册后会收到一封验证邮件，点击邮件中的链接完成验证即可正常使用。</div>
+      </div>
+      <div class="annotations">
+        <div class="annotation green"><div class="ann-icon">✍️</div><div><div class="ann-title">只需三项信息</div><div class="ann-desc">显示名称（可以是「王弟兄」「Grace」等任意称呼）、邮箱地址、密码。没有电话号码、没有实名认证，极简注册。</div></div></div>
+        <div class="annotation"><div class="ann-icon">📧</div><div><div class="ann-title">邮箱验证</div><div class="ann-desc">注册后系统自动发一封验证邮件。点击邮件里的链接，账号立即激活。这一步是为了确认邮箱真实有效，以便接收通知。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 发布代祷 ===== -->
+    <div class="page" id="page-submit">
+      <div class="page-header">
+        <h1>✍️ 发布代祷事项</h1>
+        <p>登录后才能访问这个页面。填写代祷内容，默认以匿名方式发布。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/submit</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行</div><div class="site-nav-links"><a>首页</a><a class="nav-btn">王弟兄 ▾</a><span class="nav-lang">中 / EN</span></div></div>
+        <div class="section-pad">
+          <div class="section-title">发布代祷事项</div>
+          <div class="form-group">
+            <label class="form-label">标题 <span style="color:#ea4335;">*</span></label>
+            <input class="form-input" value="为父亲的病情祷告" readonly>
+            <div class="form-hint">简短描述代祷主题，一句话即可</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">分类 <span style="color:#ea4335;">*</span></label>
+            <select class="form-input form-select"><option>健康</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">详细内容</label>
+            <textarea class="form-input form-textarea" readonly>父亲最近身体不好，需要接受检查和治疗，请弟兄姊妹为他的身体恢复和心里的平安代祷，也为医生有智慧祷告。</textarea>
+            <div class="form-hint">可以详细说明代祷背景，也可以只写简单的请求</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="margin-bottom:10px;">显示方式</label>
+            <div class="toggle-row">
+              <div class="toggle"><div class="toggle-knob"></div></div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:#2d6a9f;">以匿名方式发布（当前）</div>
+                <div style="font-size:12px;color:#888;margin-top:2px;">其他人看到的是「匿名」，关闭后会显示你的名字「王弟兄」</div>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="padding:0 24px 20px;display:flex;gap:12px;">
+            <button class="btn btn-primary">发布代祷事项</button>
+            <button class="btn btn-outline">取消</button>
+          </div>
+        </div>
+        <div class="info-box" style="margin:0 24px 24px;">📅 发布后将在首页显示 30 天，到期前 3 天你会收到邮件提醒。</div>
+      </div>
+      <div class="annotations">
+        <div class="annotation"><div class="ann-icon">🏷️</div><div><div class="ann-title">标题 + 分类（必填）</div><div class="ann-desc">标题是一句话的概述，分类从「健康、家庭、工作、教会、宣教、其他」中选一个。内容可以详细也可以简短，完全由发布者决定。</div></div></div>
+        <div class="annotation green"><div class="ann-icon">🔀</div><div><div class="ann-title">匿名开关（默认开启）</div><div class="ann-desc">开关默认是「匿名」状态（蓝色=开启匿名）。如果愿意显示名字，把开关关掉即可，届时会显示注册时填写的显示名称。管理员在后台始终能看到真实发布者。</div></div></div>
+        <div class="annotation orange"><div class="ann-icon">📅</div><div><div class="ann-title">自动 30 天过期</div><div class="ann-desc">发布后首页会显示 30 天。到期前 3 天会收到邮件提醒，提醒后代祷事项自动归档，不在首页显示，但在「我的代祷事项」里仍可查看历史。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 我的代祷 ===== -->
+    <div class="page" id="page-myprayers">
+      <div class="page-header">
+        <h1>📋 我的代祷事项</h1>
+        <p>登录后查看自己发布过的所有代祷事项，包括进行中和已归档的。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/my</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行</div><div class="site-nav-links"><a>首页</a><a class="nav-btn">王弟兄 ▾</a><span class="nav-lang">中 / EN</span></div></div>
+        <div class="section-pad">
+          <div class="section-title">我的代祷事项</div>
+          <table>
+            <thead>
+              <tr><th>标题</th><th>发布时间</th><th>状态</th><th>祷告数</th><th>操作</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>为父亲的病情祷告</strong><br><span style="font-size:11px;color:#888;">健康 · 匿名发布</span></td>
+                <td>2026-05-13</td>
+                <td><span class="status-badge status-active">进行中</span></td>
+                <td>🙏 12</td>
+                <td><button class="btn btn-danger btn-sm">删除</button></td>
+              </tr>
+              <tr>
+                <td><strong>感谢神为新工作祷告</strong><br><span style="font-size:11px;color:#888;">工作 · 显示名字</span></td>
+                <td>2026-04-10</td>
+                <td><span class="status-badge status-expired">已归档</span></td>
+                <td>🙏 8</td>
+                <td><span style="font-size:12px;color:#aaa;">已结束</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation"><div class="ann-icon">📋</div><div><div class="ann-title">查看自己的所有记录</div><div class="ann-desc">包括正在首页显示的（进行中）和已过 30 天归档的（已归档）。可以看到每条事项的祷告数，知道有多少人在为你祷告。</div></div></div>
+        <div class="annotation red"><div class="ann-icon">🗑️</div><div><div class="ann-title">删除按钮</div><div class="ann-desc">进行中的事项可以主动删除，删除后立即从首页消失。已归档的无法删除（仅供查看历史），如需清除请联系管理员。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 账号设置 ===== -->
+    <div class="page" id="page-account">
+      <div class="page-header">
+        <h1>👤 账号设置</h1>
+        <p>修改显示名称、更改密码，以及联系管理员的入口。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/account</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行</div><div class="site-nav-links"><a>首页</a><a class="nav-btn">王弟兄 ▾</a><span class="nav-lang">中 / EN</span></div></div>
+        <div class="section-pad" style="border-bottom:1px solid #e5eaf0;">
+          <div class="section-title">基本信息</div>
+          <div class="form-group">
+            <label class="form-label">显示名称</label>
+            <input class="form-input" value="王弟兄" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">邮箱地址（不可修改）</label>
+            <input class="form-input" value="wang@example.com" readonly style="background:#f8f8f8;color:#888;">
+          </div>
+          <div style="padding:0 24px 4px;"><button class="btn btn-primary btn-sm">保存修改</button></div>
+        </div>
+        <div class="section-pad" style="border-bottom:1px solid #e5eaf0;">
+          <div class="section-title">修改密码</div>
+          <div class="form-group"><label class="form-label">当前密码</label><input class="form-input" value="••••••••" type="password" readonly></div>
+          <div class="form-group"><label class="form-label">新密码</label><input class="form-input" value="••••••••••" type="password" readonly></div>
+          <div style="padding:0 24px 4px;"><button class="btn btn-outline btn-sm">更新密码</button></div>
+        </div>
+        <div class="section-pad">
+          <div class="section-title">联系管理员</div>
+          <div class="form-group">
+            <label class="form-label">留言内容</label>
+            <textarea class="form-input form-textarea" style="min-height:70px;" readonly>有问题想向管理员反映...</textarea>
+          </div>
+          <div style="padding:0 24px;"><button class="btn btn-outline btn-sm">发送留言</button></div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation"><div class="ann-icon">✏️</div><div><div class="ann-title">修改显示名称</div><div class="ann-desc">可以随时修改自己的显示名称。修改后，之前选择「显示名字」的代祷事项也会同步更新为新名称。邮箱地址注册后不能修改。</div></div></div>
+        <div class="annotation purple"><div class="ann-icon">✉️</div><div><div class="ann-title">联系管理员</div><div class="ann-desc">如有任何问题（如想删除某条已归档记录、举报不当内容、提出建议），可以在这里给管理员留言。管理员会收到邮件提醒，并在后台处理。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 管理后台 ===== -->
+    <div class="page" id="page-admin">
+      <div class="page-header">
+        <h1>📊 管理后台首页</h1>
+        <p>只有管理员账号才能进入。显示整体数据概览和各管理功能的入口。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/admin</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行 · 管理后台</div><div class="site-nav-links"><a>管理代祷</a><a>管理用户</a><a>管理分类</a><a style="color:#fcd34d;">💬 3 条新留言</a><a class="nav-btn">退出</a></div></div>
+        <div class="admin-stats">
+          <div class="stat-card"><div class="stat-num">32</div><div class="stat-label">进行中的代祷事项</div></div>
+          <div class="stat-card"><div class="stat-num">48</div><div class="stat-label">注册用户</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:#ea4335;">3</div><div class="stat-label">未读用户留言</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 24px 24px;">
+          <div style="background:#e8f0fe;border-radius:10px;padding:18px;cursor:pointer;" onclick="show('admin-prayers')">
+            <div style="font-size:20px;margin-bottom:8px;">📖</div>
+            <div style="font-weight:700;color:#1a3a5c;">管理代祷事项</div>
+            <div style="font-size:12px;color:#555;margin-top:4px;">查看、编辑、删除所有代祷事项，包括发布者真实信息</div>
+          </div>
+          <div style="background:#e6f4ea;border-radius:10px;padding:18px;cursor:pointer;" onclick="show('admin-users')">
+            <div style="font-size:20px;margin-bottom:8px;">👥</div>
+            <div style="font-weight:700;color:#1a3a5c;">管理用户</div>
+            <div style="font-size:12px;color:#555;margin-top:4px;">查看所有注册用户，禁用账号或设为管理员</div>
+          </div>
+          <div style="background:#fef9e7;border-radius:10px;padding:18px;cursor:pointer;" onclick="show('admin-categories')">
+            <div style="font-size:20px;margin-bottom:8px;">🏷️</div>
+            <div style="font-weight:700;color:#1a3a5c;">管理分类</div>
+            <div style="font-size:12px;color:#555;margin-top:4px;">新增、修改、删除代祷事项的分类标签</div>
+          </div>
+          <div style="background:#fce8e6;border-radius:10px;padding:18px;cursor:pointer;" onclick="show('admin-messages')">
+            <div style="font-size:20px;margin-bottom:8px;">💬</div>
+            <div style="font-weight:700;color:#1a3a5c;">用户留言 <span style="background:#ea4335;color:white;border-radius:10px;padding:1px 7px;font-size:11px;">3</span></div>
+            <div style="font-size:12px;color:#555;margin-top:4px;">查看用户发给管理员的私信留言</div>
+          </div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation red"><div class="ann-icon">🔐</div><div><div class="ann-title">仅管理员可见</div><div class="ann-desc">普通用户访问 /admin 开头的页面会被自动跳转回首页。管理员身份由后台数据库设置，不能自行申请，需要由现有管理员操作。</div></div></div>
+        <div class="annotation orange"><div class="ann-icon">🔔</div><div><div class="ann-title">未读留言提醒</div><div class="ann-desc">导航栏会显示未读留言数量（红色数字）。有新留言时管理员邮箱会收到提醒。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 管理代祷 ===== -->
+    <div class="page" id="page-admin-prayers">
+      <div class="page-header">
+        <h1>📖 管理代祷事项</h1>
+        <p>管理员可以看到所有代祷事项，包括匿名帖子的真实发布者。可以删除不当内容。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/admin/prayers</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行 · 管理后台</div><div class="site-nav-links"><a onclick="show('admin')" style="cursor:pointer;">← 返回</a><a class="nav-btn">退出</a></div></div>
+        <div class="section-pad">
+          <div class="section-title">所有代祷事项</div>
+          <table>
+            <thead><tr><th>标题</th><th>真实发布者</th><th>分类</th><th>发布时间</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>为父亲的病情祷告</strong></td>
+                <td>王大明<br><span style="font-size:11px;color:#888;">wang@example.com</span><br><span style="font-size:11px;color:#9c27b0;">（匿名发布）</span></td>
+                <td><span class="cat-badge badge-blue">健康</span></td>
+                <td>2026-05-13</td>
+                <td><span class="status-badge status-active">进行中</span></td>
+                <td><button class="btn btn-danger btn-sm">删除</button></td>
+              </tr>
+              <tr>
+                <td><strong>为教会主日学复兴祷告</strong></td>
+                <td>李美华<br><span style="font-size:11px;color:#888;">li@example.com</span></td>
+                <td><span class="cat-badge badge-red">教会</span></td>
+                <td>2026-05-11</td>
+                <td><span class="status-badge status-active">进行中</span></td>
+                <td><button class="btn btn-danger btn-sm">删除</button></td>
+              </tr>
+              <tr>
+                <td><strong>感谢神为新工作祷告</strong></td>
+                <td>陈志远<br><span style="font-size:11px;color:#888;">chen@example.com</span></td>
+                <td><span class="cat-badge badge-green">工作</span></td>
+                <td>2026-04-10</td>
+                <td><span class="status-badge status-expired">已归档</span></td>
+                <td><span style="font-size:12px;color:#aaa;">已归档</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation red"><div class="ann-icon">👁️</div><div><div class="ann-title">看到真实发布者</div><div class="ann-desc">即使用户选择了匿名发布，管理员在这里也能看到真实姓名和邮箱，并有「匿名发布」的标注。这是为了确保内容责任可追溯。</div></div></div>
+        <div class="annotation"><div class="ann-icon">🗑️</div><div><div class="ann-title">删除代祷事项</div><div class="ann-desc">管理员可以删除任何不符合教会规范的内容（如不当言论、隐私泄露等）。删除后立即从首页消失。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 管理用户 ===== -->
+    <div class="page" id="page-admin-users">
+      <div class="page-header">
+        <h1>👥 管理用户</h1>
+        <p>查看所有注册用户，可以禁用账号（如恶意用户）或将某人设为管理员。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/admin/users</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行 · 管理后台</div><div class="site-nav-links"><a onclick="show('admin')" style="cursor:pointer;">← 返回</a><a class="nav-btn">退出</a></div></div>
+        <div class="section-pad">
+          <div class="section-title">所有用户（共 48 人）</div>
+          <table>
+            <thead><tr><th>名称</th><th>邮箱</th><th>身份</th><th>注册时间</th><th>账号状态</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>王大明</strong></td>
+                <td>wang@example.com</td>
+                <td><span class="status-badge status-admin">管理员</span></td>
+                <td>2026-01-01</td>
+                <td><span class="status-badge status-active">正常</span></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><strong>李美华</strong></td>
+                <td>li@example.com</td>
+                <td><span style="font-size:12px;color:#666;">普通用户</span></td>
+                <td>2026-03-15</td>
+                <td><span class="status-badge status-active">正常</span></td>
+                <td>
+                  <button class="btn btn-outline btn-sm" style="margin-bottom:4px;">设为管理员</button><br>
+                  <button class="btn btn-danger btn-sm">禁用账号</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>张三</strong></td>
+                <td>zhang@example.com</td>
+                <td><span style="font-size:12px;color:#666;">普通用户</span></td>
+                <td>2026-04-20</td>
+                <td><span class="status-badge status-expired">已禁用</span></td>
+                <td><button class="btn btn-outline btn-sm">恢复账号</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation purple"><div class="ann-icon">⭐</div><div><div class="ann-title">设为管理员</div><div class="ann-desc">可以将信任的弟兄姊妹设为管理员，共同管理网站。管理员有权进入后台管理所有内容和用户。</div></div></div>
+        <div class="annotation red"><div class="ann-icon">🚫</div><div><div class="ann-title">禁用账号</div><div class="ann-desc">禁用后该用户无法再登录，但其发布的代祷事项仍保留。如遇恶意用户或注册了不认识的外人，可以禁用账号。随时可以「恢复账号」。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 管理分类 ===== -->
+    <div class="page" id="page-admin-categories">
+      <div class="page-header">
+        <h1>🏷️ 管理分类</h1>
+        <p>管理首页侧边栏的分类标签。可以根据教会需要增减或修改分类。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/admin/categories</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行 · 管理后台</div><div class="site-nav-links"><a onclick="show('admin')" style="cursor:pointer;">← 返回</a><a class="nav-btn">退出</a></div></div>
+        <div class="section-pad">
+          <div class="section-title">分类标签</div>
+          <div class="cat-list">
+            <div class="cat-row"><div class="color-dot" style="background:#4a90d9;"></div><strong style="flex:1;">健康 / Health</strong><button class="btn btn-outline btn-sm" style="margin-right:6px;">编辑</button><button class="btn btn-danger btn-sm">删除</button></div>
+            <div class="cat-row"><div class="color-dot" style="background:#34a853;"></div><strong style="flex:1;">工作 / Work</strong><button class="btn btn-outline btn-sm" style="margin-right:6px;">编辑</button><button class="btn btn-danger btn-sm">删除</button></div>
+            <div class="cat-row"><div class="color-dot" style="background:#fbbc04;"></div><strong style="flex:1;">家庭 / Family</strong><button class="btn btn-outline btn-sm" style="margin-right:6px;">编辑</button><button class="btn btn-danger btn-sm">删除</button></div>
+            <div class="cat-row"><div class="color-dot" style="background:#ea4335;"></div><strong style="flex:1;">教会 / Church</strong><button class="btn btn-outline btn-sm" style="margin-right:6px;">编辑</button><button class="btn btn-danger btn-sm">删除</button></div>
+            <div class="cat-row"><div class="color-dot" style="background:#9c27b0;"></div><strong style="flex:1;">宣教 / Mission</strong><button class="btn btn-outline btn-sm" style="margin-right:6px;">编辑</button><button class="btn btn-danger btn-sm">删除</button></div>
+          </div>
+          <div style="padding:12px 0 0;"><button class="btn btn-primary btn-sm">+ 新增分类</button></div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation"><div class="ann-icon">🏷️</div><div><div class="ann-title">灵活管理分类</div><div class="ann-desc">初始内置 6 个分类（健康、工作、家庭、教会、宣教、其他）。管理员可以根据教会实际需要随时新增（如「查经班」「短宣」）、改名或删除分类。每个分类都有对应的中英文名称和颜色。</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== 管理留言 ===== -->
+    <div class="page" id="page-admin-messages">
+      <div class="page-header">
+        <h1>💬 用户留言</h1>
+        <p>查看所有用户发给管理员的私信。有新留言时管理员邮箱会收到提醒。</p>
+      </div>
+      <div class="mockup-frame">
+        <div class="mockup-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><div class="mockup-url">prayer-web.vercel.app/admin/messages</div></div>
+        <div class="site-nav"><div class="site-nav-logo">✟ 代祷同行 · 管理后台</div><div class="site-nav-links"><a onclick="show('admin')" style="cursor:pointer;">← 返回</a><a class="nav-btn">退出</a></div></div>
+        <div class="section-pad">
+          <div class="section-title">用户留言（3 条未读）</div>
+          <div class="msg-card">
+            <div class="msg-from">李美华（li@example.com）· 2026-05-14 · <span class="status-badge status-unread">未读</span></div>
+            <div class="msg-content">管理员你好，我之前发布的一条代祷事项信息有误，能帮我删除吗？是「5月10日发布的家庭类」那条。谢谢！</div>
+            <div style="margin-top:10px;"><button class="btn btn-outline btn-sm">标为已读</button></div>
+          </div>
+          <div class="msg-card">
+            <div class="msg-from">陈志远（chen@example.com）· 2026-05-13 · <span class="status-badge status-unread">未读</span></div>
+            <div class="msg-content">建议增加一个「查经班」分类，我们小组经常有相关的代祷事项。</div>
+            <div style="margin-top:10px;"><button class="btn btn-outline btn-sm">标为已读</button></div>
+          </div>
+          <div class="msg-card read">
+            <div class="msg-from">王大明（wang@example.com）· 2026-05-10 · <span class="status-badge status-read">已读</span></div>
+            <div class="msg-content">测试留言功能，管理员看到了吗？</div>
+          </div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="annotation orange"><div class="ann-icon">📧</div><div><div class="ann-title">邮件提醒</div><div class="ann-desc">每当有用户发送新留言，管理员邮箱会收到一封提醒邮件，包含留言人和内容摘要。无需一直盯着后台。</div></div></div>
+        <div class="annotation"><div class="ann-icon">✅</div><div><div class="ann-title">标为已读</div><div class="ann-desc">处理完某条留言后点击「标为已读」，该留言会变灰，未读数字减少。留言目前只支持查看，如需回复请直接通过邮件联系对方（邮箱已显示在留言旁）。</div></div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidenav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  var nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
