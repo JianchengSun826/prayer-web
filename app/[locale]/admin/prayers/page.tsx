@@ -40,12 +40,16 @@ export default function AdminPrayersPage() {
     const label = newStatus === 'expired' ? '归档' : '删除'
     if (!confirm(`确认${label}这条代祷事项？`)) return
     setActionPending(id)
-    await fetch(`/api/admin/prayers/${id}`, {
+    const res = await fetch(`/api/admin/prayers/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: newStatus }),
     })
     setActionPending(null)
+    if (!res.ok) {
+      alert(`操作失败，请重试`)
+      return
+    }
     fetchData()
   }
 
