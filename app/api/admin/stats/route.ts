@@ -16,15 +16,15 @@ export async function GET() {
     { count: expiringToday },
     { data: recentPrayers },
   ] = await Promise.all([
-    supabase!.from('prayer_requests').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-    supabase!.from('profiles').select('*', { count: 'exact', head: true }),
-    supabase!.from('admin_messages').select('*', { count: 'exact', head: true }).is('read_at', null),
-    supabase!.from('prayer_requests')
+    supabase.from('prayer_requests').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }),
+    supabase.from('admin_messages').select('*', { count: 'exact', head: true }).is('read_at', null),
+    supabase.from('prayer_requests')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'active')
       .gte('expires_at', nowIso)
       .lte('expires_at', tomorrowIso),
-    supabase!.from('prayer_requests').select('created_at').gte('created_at', sevenDaysAgo),
+    supabase.from('prayer_requests').select('created_at').gte('created_at', sevenDaysAgo),
   ])
 
   // Build last-7-days daily counts for the dashboard bar chart
