@@ -11,6 +11,7 @@ export interface Profile {
   role: UserRole
   is_active: boolean
   created_at: string
+  email?: string | null
 }
 
 export interface Category {
