@@ -3,12 +3,18 @@ import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 import SubmitForm from '@/components/submit/SubmitForm'
 
-export default async function SubmitPage() {
+export default async function SubmitPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const prefix = locale === 'en' ? '/en' : ''
   const supabase = await createClient()
   const t = await getTranslations('submit')
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login?next=/submit')
+  if (!user) redirect(`${prefix}/auth/login?next=${prefix}/submit`)
 
   const [{ data: profile }, { data: categories }] = await Promise.all([
     supabase
@@ -19,7 +25,7 @@ export default async function SubmitPage() {
     supabase.from('categories').select('*').order('id'),
   ])
 
-  if (!profile) redirect('/auth/login')
+  if (!profile) redirect(`${prefix}/auth/login`)
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">

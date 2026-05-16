@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { getTranslations, getLocale } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { formatDisplayName } from '@/lib/display-name'
@@ -11,8 +11,9 @@ export default async function PrayerDetailPage({
 }: {
   params: Promise<{ locale: string; id: string }>
 }) {
-  const { id } = await params
-  const locale = await getLocale() as 'zh' | 'en'
+  const { locale: localeParam, id } = await params
+  const locale = localeParam as 'zh' | 'en'
+  const homeHref = locale === 'en' ? '/en' : '/'
   const t = await getTranslations('detail')
 
   const supabase = await createClient()
@@ -38,7 +39,7 @@ export default async function PrayerDetailPage({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <Link href="/" className="mb-6 block text-sm text-blue-600 hover:underline">
+      <Link href={homeHref} className="mb-6 block text-sm text-blue-600 hover:underline">
         {t('back')}
       </Link>
 

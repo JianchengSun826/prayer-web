@@ -4,12 +4,18 @@ import { redirect } from 'next/navigation'
 import AccountForm from '@/components/account/AccountForm'
 import ContactAdminForm from '@/components/account/ContactAdminForm'
 
-export default async function AccountPage() {
+export default async function AccountPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const prefix = locale === 'en' ? '/en' : ''
   const supabase = await createClient()
   const t = await getTranslations('account')
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login?next=/account')
+  if (!user) redirect(`${prefix}/auth/login?next=${prefix}/account`)
 
   const { data: profile } = await supabase
     .from('profiles')
@@ -17,7 +23,7 @@ export default async function AccountPage() {
     .eq('id', user.id)
     .single()
 
-  if (!profile) redirect('/auth/login')
+  if (!profile) redirect(`${prefix}/auth/login`)
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">

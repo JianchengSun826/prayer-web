@@ -3,12 +3,18 @@ import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 import MyPrayerList from '@/components/my/MyPrayerList'
 
-export default async function MyPage() {
+export default async function MyPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const prefix = locale === 'en' ? '/en' : ''
   const supabase = await createClient()
   const t = await getTranslations('my')
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login?next=/my')
+  if (!user) redirect(`${prefix}/auth/login?next=${prefix}/my`)
 
   const { data: prayers } = await supabase
     .from('prayer_requests')
