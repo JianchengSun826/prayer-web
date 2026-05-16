@@ -58,23 +58,30 @@ export async function GET(request: NextRequest) {
 
     if (!profile?.email) continue
 
-    const displayName = formatDisplayName(
-      { last_name: profile.last_name, first_name: profile.first_name, gender: profile.gender as Gender },
-      'zh'
-    )
-    const expiresAt = new Date(prayer.expires_at).toLocaleDateString('zh-CN')
+    try {
+      const displayName = formatDisplayName(
+        { last_name: profile.last_name, first_name: profile.first_name, gender: profile.gender as Gender },
+        'zh'
+      )
+      const expiresAt = new Date(prayer.expires_at).toLocaleDateString('zh-CN')
 
-    await sendExpiryReminderEmail(profile.email, displayName, prayer.content, expiresAt)
+      await sendExpiryReminderEmail(profile.email, displayName, prayer.content, expiresAt)
 
-    // Record that we sent this notification
-    await supabase.from('email_notifications').insert({
-      to_user_id: prayer.user_id,
-      type: 'expiry_reminder',
-      payload: { prayer_id: prayer.id },
-      sent_at: new Date().toISOString(),
-    })
+      // Record the notification — only count as sent if insert succeeds
+      const { error: insertError } = await supabase.from('email_notifications').insert({
+        to_user_id: prayer.user_id,
+        type: 'expiry_reminder',
+        payload: { prayer_id: prayer.id },
+        sent_at: new Date().toISOString(),
+      })
 
-    sent++
+      if (!insertError) {
+        sent++
+      }
+    } catch {
+      // Log and continue — one failure shouldn't abort remaining prayers
+      console.error(`Failed to send expiry reminder for prayer ${prayer.id}`)
+    }
   }
 
   return NextResponse.json({ sent })
