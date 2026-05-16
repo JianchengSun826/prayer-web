@@ -29,9 +29,9 @@ export default function AdminPrayersPage() {
     setLoading(true)
     const params = new URLSearchParams({ status, search: debouncedSearch, page: String(page) })
     fetch(`/api/admin/prayers?${params}`)
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json() })
       .then((d) => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
+      .catch(() => { setLoading(false); setData(null) })
   }, [status, debouncedSearch, page])
 
   useEffect(() => { fetchData() }, [fetchData])

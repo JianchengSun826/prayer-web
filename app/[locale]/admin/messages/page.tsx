@@ -29,7 +29,7 @@ export default function AdminMessagesPage() {
     setLoading(true)
     const params = new URLSearchParams({ read: filter, page: String(page) })
     fetch(`/api/admin/messages?${params}`)
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json() })
       .then((d) => { setData(d); setLoading(false) })
       .catch(() => { setLoading(false); setData(null) })
   }, [filter, page])

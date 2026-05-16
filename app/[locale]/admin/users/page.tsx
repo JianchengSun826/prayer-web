@@ -28,7 +28,7 @@ export default function AdminUsersPage() {
     setLoading(true)
     const params = new URLSearchParams({ search: debouncedSearch, page: String(page) })
     fetch(`/api/admin/users?${params}`)
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json() })
       .then((d) => { setData(d); setLoading(false) })
       .catch(() => { setLoading(false); setData(null) })
   }, [debouncedSearch, page])

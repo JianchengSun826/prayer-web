@@ -18,9 +18,9 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     fetch('/api/admin/stats')
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json() })
       .then((data) => { setStats(data); setLoading(false) })
-      .catch(() => setLoading(false))
+      .catch(() => { setStats(null); setLoading(false) })
   }, [])
 
   const cards = stats
