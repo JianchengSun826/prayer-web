@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import type { Gender } from '@/lib/types'
+import { sendAdminNotificationEmail } from '@/lib/email'
 
 export async function updateProfileAction(formData: FormData) {
   const supabase = await createClient()
@@ -71,6 +72,20 @@ export async function sendAdminMessageAction(formData: FormData) {
     .insert({ user_id: user.id, content: content.trim() })
 
   if (error) return { error: error.message }
+
+  // Notify admin by email (fire-and-forget)
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('last_name, first_name, gender')
+    .eq('id', user.id)
+    .single()
+
+  if (profile) {
+    const name = profile.gender === 'brother'
+      ? `${profile.last_name}弟兄`
+      : `${profile.last_name}姊妹`
+    sendAdminNotificationEmail(name, content.trim()).catch(() => {})
+  }
 
   return { success: true }
 }

@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import type { Gender } from '@/lib/types'
+import { sendWelcomeEmail } from '@/lib/email'
 
 export async function registerAction(formData: FormData) {
   const supabase = await createClient()
@@ -25,6 +26,10 @@ export async function registerAction(formData: FormData) {
   if (error) {
     return { error: error.message }
   }
+
+  // Send welcome email (fire-and-forget — don't block registration on email failure)
+  const displayName = gender === 'brother' ? `${last_name}弟兄` : `${last_name}姊妹`
+  sendWelcomeEmail(email, displayName).catch(() => {})
 
   return { success: true }
 }
