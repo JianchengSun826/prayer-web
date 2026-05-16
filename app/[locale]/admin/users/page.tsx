@@ -30,13 +30,13 @@ export default function AdminUsersPage() {
     fetch(`/api/admin/users?${params}`)
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
+      .catch(() => { setLoading(false); setData(null) })
   }, [debouncedSearch, page])
 
   useEffect(() => { fetchData() }, [fetchData])
 
   async function handleRoleChange(id: string, newRole: 'admin' | 'user') {
-    const label = newRole === 'admin' ? '提升为管理员' : '撤销管理员权限'
+    const label = newRole === 'admin' ? '提升为管理员' : '撤销管理员'
     if (!confirm(`确认${label}？`)) return
     setActionPending(id)
     const res = await fetch(`/api/admin/users/${id}`, {
