@@ -49,27 +49,29 @@ export default function AdminDashboardPage() {
             ))}
           </div>
 
-          {stats?.dailyCounts && (
-            <div className="mt-6 rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold text-gray-700">近 7 天新增代祷</h2>
-              <div className="flex h-24 items-end gap-2">
-                {stats.dailyCounts.map(({ date, count }) => {
-                  const maxCount = Math.max(...stats.dailyCounts.map((d) => d.count), 1)
-                  const heightPct = Math.round((count / maxCount) * 100)
-                  return (
-                    <div key={date} className="flex flex-1 flex-col items-center gap-1">
-                      <span className="text-xs text-gray-500">{count}</span>
-                      <div
-                        className="w-full rounded-t bg-[#2d6a9f]"
-                        style={{ height: `${heightPct}%`, minHeight: count > 0 ? '4px' : '2px' }}
-                      />
-                      <span className="text-xs text-gray-400">{date.slice(5)}</span>
-                    </div>
-                  )
-                })}
+          {stats?.dailyCounts && (() => {
+            const maxCount = Math.max(...stats.dailyCounts.map((d) => d.count), 1)
+            return (
+              <div className="mt-6 rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+                <h2 className="mb-4 text-sm font-semibold text-gray-700">近 7 天新增代祷</h2>
+                <div className="flex h-24 items-end gap-2">
+                  {stats.dailyCounts.map(({ date, count }) => {
+                    const heightPct = Math.round((count / maxCount) * 100)
+                    return (
+                      <div key={date} className="flex flex-1 flex-col items-center gap-1">
+                        <span className="text-xs text-gray-500">{count}</span>
+                        <div
+                          className="w-full rounded-t bg-[#2d6a9f]"
+                          style={{ height: `${heightPct}%`, minHeight: count > 0 ? '4px' : '2px' }}
+                        />
+                        <span className="text-xs text-gray-400">{date.slice(5)}</span>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          })()}
         </>
       )}
     </div>
